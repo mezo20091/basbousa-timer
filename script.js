@@ -1,6 +1,6 @@
 /* =========================================
-   ROMANTIC MIDNIGHT COUNTDOWN LOGIC 💕
-   Amr Diab - We Malo & 12:00 AM Reveal
+   ROMANTIC COUNTDOWN & HOLD-BAR LOGIC 💕
+   Amr Diab - Bayen Habeit
 ========================================= */
 
 // --- 1. Target Countdown Time (12:00 AM Midnight Egypt Time) ---
@@ -11,12 +11,14 @@ const hoursEl = document.getElementById('hours');
 const minutesEl = document.getElementById('minutes');
 const secondsEl = document.getElementById('seconds');
 const timerSection = document.getElementById('timerSection');
+const barSection = document.getElementById('barSection');
 const revealSection = document.getElementById('revealSection');
 const bgSong = document.getElementById('bgSong');
 const audioBtn = document.getElementById('audioBtn');
+
 let isSongPlaying = false;
 let countdownInterval = null;
-let isRevealed = false;
+let currentStage = 1; // 1: Timer, 2: Bar, 3: Reveal
 
 // Rotating waiting love messages
 const waitingQuotes = [
@@ -30,7 +32,7 @@ let quoteIndex = 0;
 const dynamicWaitText = document.getElementById('dynamicWaitText');
 
 setInterval(() => {
-  if (isRevealed || !dynamicWaitText) return;
+  if (currentStage !== 1 || !dynamicWaitText) return;
   quoteIndex = (quoteIndex + 1) % waitingQuotes.length;
   dynamicWaitText.style.opacity = 0;
   setTimeout(() => {
@@ -39,7 +41,6 @@ setInterval(() => {
   }, 300);
 }, 6000);
 
-// Format with leading zero
 function pad(num) {
   return num < 10 ? '0' + num : num;
 }
@@ -49,14 +50,13 @@ function updateCountdown() {
   const diff = targetTimestamp - now;
 
   if (diff <= 0) {
-    // Time has arrived!
     clearInterval(countdownInterval);
     hoursEl.textContent = '00';
     minutesEl.textContent = '00';
     secondsEl.textContent = '00';
     
-    if (!isRevealed) {
-      triggerMidnightReveal();
+    if (currentStage === 1) {
+      goToStage(2);
     }
     return;
   }
@@ -70,42 +70,168 @@ function updateCountdown() {
   secondsEl.textContent = pad(seconds);
 }
 
-// Start countdown clock
 countdownInterval = setInterval(updateCountdown, 1000);
 updateCountdown();
 
 
-// --- 2. Secret Shortcut for Testing / Preview (Tap Moon 5 times) ---
+// --- 2. Secret Shortcut for Testing / Preview (Tap Heart 5 times) ---
 let secretTaps = 0;
 const secretTrigger = document.getElementById('secretTrigger');
 if (secretTrigger) {
   secretTrigger.addEventListener('click', () => {
     secretTaps++;
     if (secretTaps >= 5) {
-      triggerMidnightReveal();
+      goToStage(2);
     }
   });
 }
 
 
-// --- 3. The Midnight Surprise Reveal ---
-function triggerMidnightReveal() {
-  isRevealed = true;
-  clearInterval(countdownInterval);
+// --- 3. Stage Transitions ---
+function goToStage(stageNum) {
+  currentStage = stageNum;
+  
+  timerSection.classList.remove('active');
+  barSection.classList.remove('active');
+  revealSection.classList.remove('active');
 
-  // Transition from timer to surprise section
-  timerSection.classList.remove('active-section');
-  timerSection.classList.add('hidden-section');
+  if (stageNum === 1) {
+    timerSection.classList.add('active');
+  } else if (stageNum === 2) {
+    barSection.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (window.confetti) {
+      confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
+    }
+  } else if (stageNum === 3) {
+    revealSection.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    playSong();
+    triggerCelebration();
+  }
+}
 
-  revealSection.classList.remove('hidden-section');
-  revealSection.classList.add('active-section');
 
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+// --- 4. Stage 2: Pink Love Bar Logic (Press and Hold / Tap) ---
+const loveBarContainer = document.getElementById('loveBarContainer');
+const loveBarFill = document.getElementById('loveBarFill');
+const barText = document.getElementById('barText');
+const barStatusMessage = document.getElementById('barStatusMessage');
 
-  // Grand Confetti Fireworks
+let fillProgress = 0;
+let isHolding = false;
+let holdTimer = null;
+let lastInteractionPos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+
+const barMilestones = [
+  { at: 0, text: "الحب يبدأ بلمسة منكِ 💕" },
+  { at: 20, text: "يا روحي كملي.. في كلام من القلب مستنيكي 🌸" },
+  { at: 50, text: "نص الطريق لقلبي عدا.. استمري يا بسبوستي 💖" },
+  { at: 75, text: "دقات قلبي بتزيد.. قربتي جداً! 🥰" },
+  { at: 92, text: "ثواني والأغنية والسر ينكشفوا! ✨" },
+  { at: 100, text: "اكتمل حبكِ في قلبي للأبد 💖💍" }
+];
+
+function updateBarStatus(progress) {
+  for (let i = barMilestones.length - 1; i >= 0; i--) {
+    if (progress >= barMilestones[i].at) {
+      barStatusMessage.textContent = barMilestones[i].text;
+      break;
+    }
+  }
+}
+
+function renderProgress(value) {
+  fillProgress = Math.min(100, Math.max(0, value));
+  loveBarFill.style.width = fillProgress + '%';
+  barText.textContent = Math.floor(fillProgress) + '%';
+  updateBarStatus(fillProgress);
+
+  if (fillProgress >= 100) {
+    onBarCompleted();
+  }
+}
+
+function startHolding(e) {
+  e.preventDefault();
+  isHolding = true;
+  loveBarContainer.classList.add('pressing');
+
+  if (e.touches && e.touches[0]) {
+    lastInteractionPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  } else if (e.clientX) {
+    lastInteractionPos = { x: e.clientX, y: e.clientY };
+  }
+
+  if (holdTimer) clearInterval(holdTimer);
+  holdTimer = setInterval(() => {
+    if (!isHolding || fillProgress >= 100) return;
+    
+    renderProgress(fillProgress + 2);
+    
+    if (Math.random() < 0.6) {
+      burstHeartsAt(lastInteractionPos.x, lastInteractionPos.y, 2);
+    }
+  }, 40);
+}
+
+function stopHolding() {
+  if (!isHolding) return;
+  isHolding = false;
+  loveBarContainer.classList.remove('pressing');
+  clearInterval(holdTimer);
+
+  if (fillProgress < 100) {
+    const drainTimer = setInterval(() => {
+      if (isHolding || fillProgress <= 0 || fillProgress >= 100) {
+        clearInterval(drainTimer);
+        return;
+      }
+      renderProgress(fillProgress - 0.8);
+    }, 50);
+  }
+}
+
+loveBarContainer.addEventListener('click', (e) => {
+  if (fillProgress >= 100) return;
+  const x = e.clientX || lastInteractionPos.x;
+  const y = e.clientY || lastInteractionPos.y;
+  burstHeartsAt(x, y, 6);
+  renderProgress(fillProgress + 10);
+});
+
+loveBarContainer.addEventListener('mousedown', startHolding);
+window.addEventListener('mouseup', stopHolding);
+
+loveBarContainer.addEventListener('touchstart', startHolding, { passive: false });
+window.addEventListener('touchend', stopHolding);
+window.addEventListener('touchcancel', stopHolding);
+
+function onBarCompleted() {
+  clearInterval(holdTimer);
+  isHolding = false;
+  loveBarContainer.classList.remove('pressing');
+  
+  if (window.confetti) {
+    confetti({
+      particleCount: 80,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#ff6584', '#ec4899', '#db2777', '#f43f5e']
+    });
+  }
+
+  setTimeout(() => {
+    goToStage(3);
+  }, 800);
+}
+
+
+// --- 5. Stage 3 Reveal & Celebration ---
+function triggerCelebration() {
   if (window.confetti) {
     const end = Date.now() + 4 * 1000;
-    const colors = ['#ff3385', '#ec4899', '#f59e0b', '#ffffff', '#fda4af'];
+    const colors = ['#ff6584', '#ec4899', '#db2777', '#f59e0b', '#ffffff'];
 
     (function frame() {
       confetti({
@@ -128,30 +254,10 @@ function triggerMidnightReveal() {
       }
     })();
   }
-
-  // Attempt auto-play (mobile browsers often require user touch, so button is also provided)
-  playSong();
-}
-
-function openSurpriseNow() {
-  playSong();
-  const unlockBanner = document.getElementById('unlockBanner');
-  if (unlockBanner) {
-    unlockBanner.style.display = 'none';
-  }
-  
-  if (window.confetti) {
-    confetti({
-      particleCount: 80,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: ['#ff3385', '#ec4899', '#f59e0b']
-    });
-  }
 }
 
 
-// --- 4. Background Song Controls (Amr Diab - We Malo) ---
+// --- 6. Background Song Controls (Amr Diab - Bayen Habeit) ---
 function playSong() {
   if (!bgSong) return;
   bgSong.volume = 0.9;
@@ -161,7 +267,7 @@ function playSong() {
       isSongPlaying = true;
       audioBtn.classList.add('playing');
     }).catch(err => {
-      console.log('Autoplay policy caught:', err);
+      console.log('Autoplay caught:', err);
     });
   }
 }
@@ -184,7 +290,7 @@ function toggleSong() {
 audioBtn.addEventListener('click', toggleSong);
 
 
-// --- 5. Interactive Love Reaction Button ---
+// --- 7. Interactive Love Reaction Button ---
 function sendLoveReaction(btn) {
   playSong();
   const successEl = document.getElementById('reactionSuccess');
@@ -194,7 +300,7 @@ function sendLoveReaction(btn) {
       particleCount: 90,
       spread: 85,
       origin: { y: 0.7 },
-      colors: ['#ff3385', '#ec4899', '#f59e0b', '#ffffff']
+      colors: ['#ff6584', '#ec4899', '#f59e0b', '#ffffff']
     });
   }
 
@@ -202,15 +308,14 @@ function sendLoveReaction(btn) {
     successEl.style.display = 'block';
   }
   btn.style.transform = 'scale(1.06)';
-  btn.style.boxShadow = '0 0 25px #ff3385';
+  btn.style.boxShadow = '0 0 25px #ec4899';
 }
 
 
-// --- 6. Starry Night & Floating Hearts Canvas Animation ---
-const canvas = document.getElementById('starsCanvas');
+// --- 8. Ambient Floating Hearts Canvas Animation ---
+const canvas = document.getElementById('heartCanvas');
 const ctx = canvas.getContext('2d');
-let stars = [];
-let floatingHearts = [];
+let hearts = [];
 
 function resizeCanvas() {
   canvas.width = window.innerWidth;
@@ -219,29 +324,18 @@ function resizeCanvas() {
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
-// Create twinkling background stars
-for (let i = 0; i < 65; i++) {
-  stars.push({
-    x: Math.random() * window.innerWidth,
-    y: Math.random() * window.innerHeight,
-    radius: Math.random() * 1.5 + 0.5,
-    alpha: Math.random() * 0.8 + 0.2,
-    alphaSpeed: (Math.random() * 0.02 + 0.005) * (Math.random() < 0.5 ? 1 : -1)
-  });
-}
-
-class NightHeart {
-  constructor() {
-    this.x = Math.random() * canvas.width;
-    this.y = canvas.height + 20;
-    this.size = Math.random() * 14 + 10;
-    this.speedY = Math.random() * -1.2 - 0.5;
-    this.speedX = Math.random() * 1 - 0.5;
-    this.opacity = Math.random() * 0.6 + 0.25;
-    this.decay = 0.002;
+class FloatingHeart {
+  constructor(x, y, isBurst = false) {
+    this.x = x || Math.random() * canvas.width;
+    this.y = y || canvas.height + 20;
+    this.size = Math.random() * (isBurst ? 22 : 16) + (isBurst ? 12 : 8);
+    this.speedY = isBurst ? (Math.random() * -6 - 2) : (Math.random() * -1.5 - 0.6);
+    this.speedX = isBurst ? (Math.random() * 6 - 3) : (Math.random() * 1 - 0.5);
+    this.opacity = isBurst ? 1 : Math.random() * 0.6 + 0.3;
+    this.decay = isBurst ? Math.random() * 0.02 + 0.015 : 0.002;
     this.rotation = Math.random() * Math.PI;
-    this.rotSpeed = (Math.random() - 0.5) * 0.025;
-    const colors = ['#ff3385', '#ec4899', '#fb7185', '#fda4af'];
+    this.rotSpeed = (Math.random() - 0.5) * 0.03;
+    const colors = ['#f472b6', '#ec4899', '#fb7185', '#fda4af', '#f43f5e'];
     this.color = colors[Math.floor(Math.random() * colors.length)];
   }
 
@@ -269,38 +363,35 @@ class NightHeart {
   }
 }
 
-function animateSky() {
+function spawnAmbientHearts() {
+  if (hearts.length < 35 && Math.random() < 0.25) {
+    hearts.push(new FloatingHeart());
+  }
+}
+
+function animateHearts() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  spawnAmbientHearts();
 
-  // Draw and twinkle stars
-  for (let s of stars) {
-    s.alpha += s.alphaSpeed;
-    if (s.alpha > 0.95 || s.alpha < 0.15) s.alphaSpeed = -s.alphaSpeed;
-    ctx.beginPath();
-    ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
-    ctx.fill();
-  }
-
-  // Spawn gentle rising hearts
-  if (floatingHearts.length < 25 && Math.random() < 0.18) {
-    floatingHearts.push(new NightHeart());
-  }
-
-  for (let i = floatingHearts.length - 1; i >= 0; i--) {
-    floatingHearts[i].update();
-    floatingHearts[i].draw();
-    if (floatingHearts[i].opacity <= 0 || floatingHearts[i].y < -30) {
-      floatingHearts.splice(i, 1);
+  for (let i = hearts.length - 1; i >= 0; i--) {
+    hearts[i].update();
+    hearts[i].draw();
+    if (hearts[i].opacity <= 0 || hearts[i].y < -40) {
+      hearts.splice(i, 1);
     }
   }
-
-  requestAnimationFrame(animateSky);
+  requestAnimationFrame(animateHearts);
 }
-animateSky();
+animateHearts();
+
+function burstHeartsAt(x, y, count = 15) {
+  for (let i = 0; i < count; i++) {
+    hearts.push(new FloatingHeart(x, y, true));
+  }
+}
 
 
-// --- 7. Fullscreen Lightbox Modal ---
+// --- 9. Fullscreen Lightbox Modal ---
 const lightbox = document.getElementById('lightboxModal');
 const lightboxImg = document.getElementById('lightboxImg');
 const lightboxCaption = document.getElementById('lightboxCaption');
@@ -309,6 +400,7 @@ function openLightbox(src, caption) {
   lightboxImg.src = src;
   lightboxCaption.textContent = caption;
   lightbox.classList.add('active');
+  burstHeartsAt(window.innerWidth / 2, window.innerHeight / 2, 10);
 }
 
 function closeLightbox(e) {
@@ -317,8 +409,6 @@ function closeLightbox(e) {
   }
 }
 
-// Global functions for HTML onclick
 window.openLightbox = openLightbox;
 window.closeLightbox = closeLightbox;
-window.openSurpriseNow = openSurpriseNow;
 window.sendLoveReaction = sendLoveReaction;
