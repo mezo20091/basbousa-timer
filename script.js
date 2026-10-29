@@ -3,9 +3,10 @@
    Amr Diab - Bayen Habeit
 ========================================= */
 
-// --- 1. Target Countdown Time (12:00 AM Midnight Egypt Time) ---
-// Target: 2026-10-30 00:00:00 Egypt Time (UTC+3)
-const targetTimestamp = new Date('2026-10-30T00:00:00+03:00').getTime();
+// --- 1. Target Countdown Time (12:00 AM Midnight Egypt Time / End of DST) ---
+// Exact timestamp of Midnight Egypt Summer Time: 2026-10-29T21:00:00.000Z (1793307600000)
+// At this exact moment, Egypt switches to winter time and the clock turns back to 11:00 PM.
+const targetTimestamp = 1793307600000;
 
 const hoursEl = document.getElementById('hours');
 const minutesEl = document.getElementById('minutes');
@@ -20,6 +21,24 @@ const testToggleBtn = document.getElementById('testToggleBtn');
 let isSongPlaying = false;
 let countdownInterval = null;
 let currentStage = 1; // 1: Timer, 2: Bar, 3: Reveal
+
+// High-precision Monotonic tracking to prevent any OS clock rollback from delaying the unlock
+const pageLoadPerf = performance.now();
+let timeOffset = 0; // Network server time difference
+let initialDiff = Math.max(0, targetTimestamp - Date.now());
+
+// Background network sync to eliminate device clock desync / manual timezone error
+fetch(window.location.href, { method: 'HEAD', cache: 'no-store' })
+  .then(res => {
+    const serverDateHeader = res.headers.get('date');
+    if (serverDateHeader) {
+      const serverTime = new Date(serverDateHeader).getTime();
+      timeOffset = serverTime - Date.now();
+      initialDiff = Math.max(0, targetTimestamp - (Date.now() + timeOffset));
+      updateCountdown();
+    }
+  })
+  .catch(() => {});
 
 // Rotating waiting messages (without emojis)
 const waitingQuotes = [
@@ -47,15 +66,22 @@ function pad(num) {
 }
 
 function updateCountdown() {
-  const now = new Date().getTime();
-  const diff = targetTimestamp - now;
+  const perfElapsed = performance.now() - pageLoadPerf;
+  const monotonicRemaining = Math.max(0, initialDiff - perfElapsed);
+  const now = Date.now() + timeOffset;
+  const clockRemaining = targetTimestamp - now;
+
+  // Use Math.min so if either monotonic time runs out OR clock reaches target, it triggers immediately
+  const diff = Math.min(monotonicRemaining, clockRemaining);
 
   if (diff <= 0) {
-    clearInterval(countdownInterval);
+    if (countdownInterval) clearInterval(countdownInterval);
     hoursEl.textContent = '00';
     minutesEl.textContent = '00';
     secondsEl.textContent = '00';
     
+    try { localStorage.setItem('basbousa_unlocked', '1'); } catch(e) {}
+
     if (currentStage === 1) {
       goToStage(2);
     }
@@ -111,10 +137,18 @@ function toggleTestView() {
   }
 }
 
-// Check URL param ?view=reveal or ?test=1
+// Check URL param ?view=reveal or ?test=1 or unlocked storage
 const urlParams = new URLSearchParams(window.location.search);
 if (urlParams.get('view') === 'reveal' || urlParams.get('test') === '1') {
   goToStage(3);
+} else {
+  try {
+    const isUnlocked = localStorage.getItem('basbousa_unlocked') === '1';
+    const isPastTarget = (Date.now() + timeOffset) >= targetTimestamp;
+    if ((isUnlocked || isPastTarget) && !urlParams.get('test_timer')) {
+      goToStage(2);
+    }
+  } catch(e) {}
 }
 
 
