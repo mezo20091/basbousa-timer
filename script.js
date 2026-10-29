@@ -1,5 +1,5 @@
 /* =========================================
-   ROMANTIC COUNTDOWN & HOLD-BAR LOGIC 💕
+   ROMANTIC COUNTDOWN & HOLD-BAR LOGIC
    Amr Diab - Bayen Habeit
 ========================================= */
 
@@ -15,18 +15,19 @@ const barSection = document.getElementById('barSection');
 const revealSection = document.getElementById('revealSection');
 const bgSong = document.getElementById('bgSong');
 const audioBtn = document.getElementById('audioBtn');
+const testToggleBtn = document.getElementById('testToggleBtn');
 
 let isSongPlaying = false;
 let countdownInterval = null;
 let currentStage = 1; // 1: Timer, 2: Bar, 3: Reveal
 
-// Rotating waiting love messages
+// Rotating waiting messages (without emojis)
 const waitingQuotes = [
-  "كل ثانية بتعدي بتقربني ليكي أكتر.. خليكي جاهزة يا روحي 🌸",
-  "في سر جميل مستنيكي هنا أول ما تدق الساعة 12 بالظبط ✨",
-  "بتمنى كل لحظة في عمري الجاي تكوني معايا يا بسبوستي 💖",
-  "أجمل مفاجأة لأجمل وأغلى إنسانة في الكون ده كله 💍",
-  "دقات قلبي بتعد مع الثواني لحد ما اللحظة تيجي 🥺❤️"
+  "كل ثانية بتعدي بتقربني ليكي أكتر.. خليكي جاهزة يا روحي",
+  "في سر مستنيكي هنا أول ما تدق الساعة 12 بالظبط",
+  "بتمنى كل لحظة في عمري الجاي تكوني معايا يا بسبوستي",
+  "أجمل مفاجأة لأجمل وأغلى إنسانة في الكون ده كله",
+  "دقات قلبي بتعد مع الثواني لحد ما اللحظة تيجي"
 ];
 let quoteIndex = 0;
 const dynamicWaitText = document.getElementById('dynamicWaitText');
@@ -36,10 +37,10 @@ setInterval(() => {
   quoteIndex = (quoteIndex + 1) % waitingQuotes.length;
   dynamicWaitText.style.opacity = 0;
   setTimeout(() => {
-    dynamicWaitText.textContent = `"${waitingQuotes[quoteIndex]}"`;
+    dynamicWaitText.textContent = waitingQuotes[quoteIndex];
     dynamicWaitText.style.opacity = 1;
   }, 300);
-}, 6000);
+}, 5000);
 
 function pad(num) {
   return num < 10 ? '0' + num : num;
@@ -74,20 +75,7 @@ countdownInterval = setInterval(updateCountdown, 1000);
 updateCountdown();
 
 
-// --- 2. Secret Shortcut for Testing / Preview (Tap Heart 5 times) ---
-let secretTaps = 0;
-const secretTrigger = document.getElementById('secretTrigger');
-if (secretTrigger) {
-  secretTrigger.addEventListener('click', () => {
-    secretTaps++;
-    if (secretTaps >= 5) {
-      goToStage(2);
-    }
-  });
-}
-
-
-// --- 3. Stage Transitions ---
+// --- 2. Stage Transitions ---
 function goToStage(stageNum) {
   currentStage = stageNum;
   
@@ -97,6 +85,8 @@ function goToStage(stageNum) {
 
   if (stageNum === 1) {
     timerSection.classList.add('active');
+    if (testToggleBtn) testToggleBtn.textContent = 'معاينة صفحة المفاجأة';
+    pauseSong();
   } else if (stageNum === 2) {
     barSection.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -105,10 +95,39 @@ function goToStage(stageNum) {
     }
   } else if (stageNum === 3) {
     revealSection.classList.add('active');
+    if (testToggleBtn) testToggleBtn.textContent = 'الرجوع للمؤقت';
     window.scrollTo({ top: 0, behavior: 'smooth' });
     playSong();
     triggerCelebration();
   }
+}
+
+// Test View Switcher
+function toggleTestView() {
+  if (currentStage === 3) {
+    goToStage(1);
+  } else {
+    goToStage(3);
+  }
+}
+
+// Check URL param ?view=reveal or ?test=1
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('view') === 'reveal' || urlParams.get('test') === '1') {
+  goToStage(3);
+}
+
+
+// --- 3. Secret Heart Shortcut ---
+let secretTaps = 0;
+const secretTrigger = document.getElementById('secretTrigger');
+if (secretTrigger) {
+  secretTrigger.addEventListener('click', () => {
+    secretTaps++;
+    if (secretTaps >= 5) {
+      goToStage(2);
+    }
+  });
 }
 
 
@@ -124,12 +143,12 @@ let holdTimer = null;
 let lastInteractionPos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 
 const barMilestones = [
-  { at: 0, text: "الحب يبدأ بلمسة منكِ 💕" },
-  { at: 20, text: "يا روحي كملي.. في كلام من القلب مستنيكي 🌸" },
-  { at: 50, text: "نص الطريق لقلبي عدا.. استمري يا بسبوستي 💖" },
-  { at: 75, text: "دقات قلبي بتزيد.. قربتي جداً! 🥰" },
-  { at: 92, text: "ثواني والأغنية والسر ينكشفوا! ✨" },
-  { at: 100, text: "اكتمل حبكِ في قلبي للأبد 💖💍" }
+  { at: 0, text: "الحب يبدأ بلمسة منكِ" },
+  { at: 20, text: "كملي.. في كلام من القلب مستنيكي" },
+  { at: 50, text: "نص الطريق لقلبي عدا.. استمري يا بسبوستي" },
+  { at: 75, text: "دقات قلبي بتزيد.. قربتي جداً" },
+  { at: 92, text: "ثواني والأغنية والسر ينكشفوا" },
+  { at: 100, text: "اكتمل حبكِ في قلبي للأبد" }
 ];
 
 function updateBarStatus(progress) {
@@ -223,7 +242,7 @@ function onBarCompleted() {
 
   setTimeout(() => {
     goToStage(3);
-  }, 800);
+  }, 600);
 }
 
 
@@ -258,6 +277,25 @@ function triggerCelebration() {
 
 
 // --- 6. Background Song Controls (Amr Diab - Bayen Habeit) ---
+let audioUnlockHandlerAttached = false;
+
+function setupAudioUnlockListener() {
+  if (audioUnlockHandlerAttached) return;
+  audioUnlockHandlerAttached = true;
+  
+  const unlockAudio = () => {
+    if (currentStage === 3 && !isSongPlaying) {
+      playSong();
+    }
+    document.removeEventListener('click', unlockAudio);
+    document.removeEventListener('touchstart', unlockAudio);
+    audioUnlockHandlerAttached = false;
+  };
+  
+  document.addEventListener('click', unlockAudio, { once: true });
+  document.addEventListener('touchstart', unlockAudio, { once: true });
+}
+
 function playSong() {
   if (!bgSong) return;
   bgSong.volume = 0.9;
@@ -267,7 +305,8 @@ function playSong() {
       isSongPlaying = true;
       audioBtn.classList.add('playing');
     }).catch(err => {
-      console.log('Autoplay caught:', err);
+      console.log('Autoplay caught by browser policy, listening for first touch:', err);
+      setupAudioUnlockListener();
     });
   }
 }
@@ -290,29 +329,7 @@ function toggleSong() {
 audioBtn.addEventListener('click', toggleSong);
 
 
-// --- 7. Interactive Love Reaction Button ---
-function sendLoveReaction(btn) {
-  playSong();
-  const successEl = document.getElementById('reactionSuccess');
-
-  if (window.confetti) {
-    confetti({
-      particleCount: 90,
-      spread: 85,
-      origin: { y: 0.7 },
-      colors: ['#ff6584', '#ec4899', '#f59e0b', '#ffffff']
-    });
-  }
-
-  if (successEl) {
-    successEl.style.display = 'block';
-  }
-  btn.style.transform = 'scale(1.06)';
-  btn.style.boxShadow = '0 0 25px #ec4899';
-}
-
-
-// --- 8. Ambient Floating Hearts Canvas Animation ---
+// --- 7. Ambient Floating Hearts Canvas Animation ---
 const canvas = document.getElementById('heartCanvas');
 const ctx = canvas.getContext('2d');
 let hearts = [];
@@ -391,7 +408,7 @@ function burstHeartsAt(x, y, count = 15) {
 }
 
 
-// --- 9. Fullscreen Lightbox Modal ---
+// --- 8. Fullscreen Lightbox Modal ---
 const lightbox = document.getElementById('lightboxModal');
 const lightboxImg = document.getElementById('lightboxImg');
 const lightboxCaption = document.getElementById('lightboxCaption');
@@ -411,4 +428,4 @@ function closeLightbox(e) {
 
 window.openLightbox = openLightbox;
 window.closeLightbox = closeLightbox;
-window.sendLoveReaction = sendLoveReaction;
+window.toggleTestView = toggleTestView;

@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>مفاجأة منتصف الليل لبسبوستي 💖</title>
+  <title>لبسبوستي</title>
   
   <!-- Web App Meta -->
   <meta name="theme-color" content="#f472b6">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   
-  <!-- Google Fonts: Marhey, Cairo & Amiri -->
+  <!-- Google Fonts: Cairo & Amiri & Marhey -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Marhey:wght@400;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Marhey:wght@500;700&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -35,7 +35,7 @@
   <!-- Floating Hearts Particle Canvas -->
   <canvas id="heartCanvas"></canvas>
 
-  <!-- Floating Music Toggle -->
+  <!-- Music Toggle Button -->
   <div class="audio-control" id="audioBtn" title="تشغيل / إيقاف الأغنية">
     <i class="fa-solid fa-music"></i>
     <span class="music-wave">
@@ -43,23 +43,27 @@
     </span>
   </div>
 
+  <!-- Test Mode Switcher (For Mezo to preview anytime) -->
+  <div class="test-switcher" id="testSwitcher">
+    <button onclick="toggleTestView()" id="testToggleBtn">معاينة صفحة المفاجأة</button>
+  </div>
+
   <main class="main-wrapper">
 
-    <!-- ==================== STAGE 1: COUNTDOWN TIMER (ALL PINK) ==================== -->
+    <!-- ==================== STAGE 1: COUNTDOWN TIMER ==================== -->
     <section id="timerSection" class="stage-section active">
       <div class="glass-card pink-glow text-center">
         
-        <!-- Secret click on heart (5 taps) to test/preview -->
-        <div class="heart-pulse-icon" id="secretTrigger" title="انقري هنا يا قمري">
+        <div class="heart-pulse-icon" id="secretTrigger">
           <i class="fa-solid fa-heart"></i>
         </div>
 
-        <h1 class="romantic-title">مفاجأة منتصف الليل لبسبوستي 💖</h1>
+        <h1 class="romantic-title">مفاجأة منتصف الليل لبسبوستي</h1>
         <p class="subtitle">
-          في سرّ جميل مستنيكي يا روح قلبي أول ما تدق الساعة 12 بتوقيت مصر ✨
+          في سر مستنيكي يا روح قلبي أول ما تدق الساعة 12
         </p>
 
-        <!-- Countdown Display (Pink Glass Blocks) -->
+        <!-- Countdown Display -->
         <div class="countdown-grid">
           <div class="time-block">
             <div class="time-number" id="hours">00</div>
@@ -79,15 +83,9 @@
 
         <!-- Waiting Quote Box -->
         <div class="waiting-quote-box">
-          <i class="fa-solid fa-heart quote-icon"></i>
           <p id="dynamicWaitText" class="dynamic-wait-text">
-            "كل ثانية بتعدي بتقربني ليكي أكتر.. خليكي جاهزة يا روحي 🌸"
+            كل ثانية بتعدي بتقربني ليكي أكتر.. خليكي جاهزة يا روحي
           </p>
-        </div>
-
-        <div class="egypt-time-note">
-          <i class="fa-regular fa-clock"></i>
-          <span>المؤقت مضبوط على الساعة 12:00 منتصف الليل بتوقيت مصر 🇪🇬</span>
         </div>
 
       </div>
@@ -98,16 +96,16 @@
       <div class="glass-card pink-glow text-center">
         
         <div class="celebration-badge">
-          <span>🎉 جت الساعة 12 يا روح ميزو 🎉</span>
+          <span>جت الساعة 12 يا بسبوستي</span>
         </div>
 
-        <h2 class="romantic-title">شريط الحب الوردي 💖</h2>
+        <h2 class="romantic-title">شريط الحب</h2>
         <p class="subtitle">
-          المفاجأة وصلت! اضغطي باستمرار على الشريط الوردي لفتح سر حبنا وسماع الأغنية ✨
+          المفاجأة وصلت.. اضغطي باستمرار على الشريط عشان يفتح ليكي السر
         </p>
 
         <div class="hold-instruction">
-          <span>👇 اضغطي مطولاً هنا ولا ترفعي يدك 👇</span>
+          <span>اضغطي مطولاً هنا ولا ترفعي يدك</span>
         </div>
 
         <!-- Interactive Press-and-Hold Bar -->
@@ -120,81 +118,65 @@
         </div>
 
         <div class="love-hint-message" id="barStatusMessage">
-          الحب يبدأ بلمسة منكِ 💕
+          الحب يبدأ بلمسة منكِ
         </div>
 
         <div class="tap-fallback">
-          (إذا كان صعباً الضغط المطول، يمكنكِ النقر المتتالي لملء الشريط 🌸)
+          (إذا كان صعباً عليكِ الضغط المطول، يمكنكِ النقر المتتالي لملء الشريط)
         </div>
 
       </div>
     </section>
 
-    <!-- ==================== STAGE 3: THE MIDNIGHT REVEAL & ROMANTIC LETTER ==================== -->
+    <!-- ==================== STAGE 3: THE REVEAL & ROMANTIC LETTER ==================== -->
     <section id="revealSection" class="stage-section">
       
       <div class="glass-card pink-glow text-center" id="loveCard">
         
-        <div class="celebration-badge gold-badge">
-          <span>💍 باين حبيت.. وأحلى حب في الدنيا 💍</span>
-        </div>
-
-        <h1 class="romantic-title big-title">بحبك أوي يا بسبوستي 💖</h1>
+        <h1 class="romantic-title big-title">بحبك يا بسبوستي</h1>
 
         <!-- The Photo Inside (Clean Zoomable Preview) -->
-        <div class="photo-frame" onclick="openLightbox('love.jpg', 'إيدك في إيدي.. أماني وسعادتي كلها في الدنيا دي 🤍')">
+        <div class="photo-frame" onclick="openLightbox('love.jpg', 'إيدك في إيدي.. أماني وسعادتي كلها في الدنيا دي')">
           <img src="love.jpg" alt="إيدي في إيدك" class="love-img" id="mainPhoto">
           <div class="photo-overlay">
-            <span><i class="fa-solid fa-magnifying-glass-plus"></i> انقري لتكبير الصورة</span>
+            <span>انقري لتكبير الصورة</span>
           </div>
         </div>
 
-        <!-- The Heartfelt Egyptian Love Message -->
+        <!-- Sincere, Heartfelt Egyptian Love Message (No Emojis) -->
         <div class="egyptian-letter-box">
-          <div class="letter-tag">💌 رسالة من قلبي لعينيكي الحلوين:</div>
           
-          <p class="main-statement">
-            "بحبك يا بسبوستي من كل قلبي.. وبتمنى في الساعة دي وكل ثانية جاية من عمري تكوني ليا ومعايا ❤️"
+          <p class="letter-paragraph opening">
+            كل سنة وكل يوم بيمر وأنتي معايا، بتأكد إنك أجمل حاجة حصلت في عمري كله.
           </p>
 
-          <p class="sweet-words">
-            عارفة يا بسبوستي؟ أنا بحب كل حاجة فيكي.. بس <strong>عيونك دي حكاية تانية خالص</strong>، فيها سحر ولمعة حب بتخليني أنسى الدنيا كلها أول ما أبص فيها.
+          <p class="letter-paragraph">
+            أنا بحب كل حاجة فيكي، بس عيونك دي حكاية تانية خالص.. لما ببص في عيونك، مش بشوف بس الإنسانة اللي بحبها، أنا بشوف راحتي وأماني، وبشوف مستقبلي اللي بتمناه. عيونك دايماً بتطمني وبتحسسني إن الدنيا لسه بخير مهما كانت صعبة.
           </p>
 
-          <p class="sweet-words">
-            ضحكتكِ ولمسة إيدكِ في إيدي بتهوّن عليا كل تعب، وبحس وأنا جنبك إن قلبي مرتاح ومطمن، ومفيش أي حاجة في الدنيا تقدر تعوض وجودك جنبي يا أغلى وأحن إنسانة دخلت حياتي 🥺🌸
+          <p class="letter-paragraph">
+            وجودك في حياتي غيّر فيا حاجات كتير للأحسن، وطيبة قلبك وحنيتك مفيش زيهم. لمسة إيدك ووقفتك جنبي بتهوّن عليا أي تعب، وبحس بجد بفضل ربنا عليا إنه رزقني بيكي.
           </p>
 
-          <!-- Amr Diab - Bayen Habeit Lyrics Card -->
           <div class="song-lyrics-card">
-            <div class="song-note-icon"><i class="fa-solid fa-music"></i></div>
-            <p class="lyrics-line">"باين حبيت أيوه أنا حبيت.. حبيت أتحب وبان عليا 🎶"</p>
-            <p class="lyrics-line">"ده شايف فيك كل اللي زمان.. أنا كان نفسي ألاقيه ف الدنيا ديَ 💕"</p>
+            <p class="lyrics-line">باين حبيت أيوه أنا حبيت.. حبيت أتحب وبان عليا</p>
+            <p class="lyrics-line">ده شايف فيك كل اللي زمان.. أنا كان نفسي ألاقيه ف الدنيا ديَ</p>
           </div>
 
-          <p class="prayer-words">
-            ربنا يخليكي ليا وما يحرمني من ضحكتك، وتفضلي منورة حياتي ونسي وسندي لحد ما نلبس الدبل ونتجوز وتبقي أم عيالي يا كل ما أملك 💍🤍👰‍♀️
+          <p class="letter-paragraph">
+            في اللحظة دي، وفي كل ثانية جاية من حياتي، بتمنى من كل قلبي إن ربنا يجمعنا على خير، وتفضلي منورة حياتي، وتبقي شريكة عمري وسندي، ونبني بيتنا سوا، وتكوني أم لعيالنا.
           </p>
-        </div>
 
-        <!-- Interactive Reaction Button -->
-        <div class="interactive-reaction-box">
-          <p class="reaction-prompt">بتحبي ميزو قد إيه يا بسبوستي؟ 🥰</p>
-          <button class="love-reaction-btn" onclick="sendLoveReaction(this)">
-            <i class="fa-solid fa-heart"></i>
-            <span>بحبك وبحب كل تفاصيلك يا ميزو! 💕</span>
-          </button>
-          <div id="reactionSuccess" class="reaction-success">
-            🎉 بموت فيكي يا بسبوسة روحي.. وربنا يجمعنا على خير في بيتنا قريباً يا أحلى عروسة في الكون 💍💖
-          </div>
+          <p class="letter-paragraph closing">
+            بحبك من كل قلبي، ومهما قولت كلام عمري ما هعرف أوصف أنتي غالية عندي قد إيه.
+          </p>
+
         </div>
 
       </div>
 
-      <!-- Footer -->
       <footer class="romantic-footer text-center">
-        <div class="footer-sparkles">💖 🌸 💍 💖</div>
-        <p class="footer-msg">صُنع بكل نبضة حب خصيصاً لبسبوستي الغالية ✨</p>
+        <p class="footer-msg">معاً دائماً وإلى الأبد إن شاء الله</p>
       </footer>
 
     </section>

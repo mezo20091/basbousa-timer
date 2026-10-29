@@ -1,23 +1,22 @@
 /* =========================================
-   ALL-PINK ROMANTIC THEME WITH BLURRED PHOTO BG 💕
-   For Basboosa & Mezo
+   ALL-PINK ROMANTIC THEME WITH BLURRED PHOTO BG
+   Clean, Elegant, Sincere Tone
 ========================================= */
 
 :root {
   --primary-pink: #ff6584;
   --hot-pink: #ec4899;
-  --deep-pink: #db2777;
+  --deep-pink: #be185d;
   --soft-pink: #fce7f3;
   --pastel-pink: #fff0f5;
-  --rose-glow: rgba(236, 72, 153, 0.45);
-  --gold: #f59e0b;
-  --text-dark: #4a1525;
-  --text-muted: #832742;
-  --glass-bg: rgba(255, 255, 255, 0.84);
-  --glass-border: rgba(255, 182, 193, 0.7);
-  --font-title: 'Marhey', 'Cairo', cursive, sans-serif;
+  --rose-glow: rgba(236, 72, 153, 0.35);
+  --text-dark: #371b26;
+  --text-muted: #6b213f;
+  --glass-bg: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(255, 182, 193, 0.75);
+  --font-title: 'Marhey', 'Cairo', sans-serif;
   --font-body: 'Cairo', sans-serif;
-  --font-poem: 'Amiri', serif;
+  --font-letter: 'Amiri', 'Cairo', serif;
 }
 
 * {
@@ -48,7 +47,7 @@ html, body {
   background-image: url('love.jpg');
   background-size: cover;
   background-position: center;
-  filter: blur(8px) brightness(0.92);
+  filter: blur(9px) brightness(0.92);
   transform: scale(1.04);
   z-index: 0;
   pointer-events: none;
@@ -61,12 +60,12 @@ html, body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, rgba(255, 240, 245, 0.75) 0%, rgba(252, 231, 243, 0.8) 50%, rgba(251, 207, 232, 0.72) 100%);
+  background: linear-gradient(135deg, rgba(255, 240, 245, 0.78) 0%, rgba(252, 231, 243, 0.82) 50%, rgba(251, 207, 232, 0.75) 100%);
   z-index: 1;
   pointer-events: none;
 }
 
-/* Floating Hearts Particle Canvas */
+/* Floating Hearts Canvas */
 #heartCanvas {
   position: fixed;
   top: 0;
@@ -83,13 +82,13 @@ html, body {
   top: max(16px, env(safe-area-inset-top));
   left: 16px;
   z-index: 999;
-  width: 48px;
-  height: 48px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
   background: var(--glass-bg);
   backdrop-filter: blur(10px);
   border: 2px solid var(--primary-pink);
-  box-shadow: 0 4px 18px var(--rose-glow);
+  box-shadow: 0 4px 15px var(--rose-glow);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -130,6 +129,32 @@ html, body {
   100% { height: 14px; }
 }
 
+/* Test Mode Switcher Button (Top Right) */
+.test-switcher {
+  position: fixed;
+  top: max(16px, env(safe-area-inset-top));
+  right: 16px;
+  z-index: 999;
+}
+
+.test-switcher button {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1.5px solid var(--primary-pink);
+  color: var(--deep-pink);
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 700;
+  box-shadow: 0 4px 12px var(--rose-glow);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.test-switcher button:active {
+  transform: scale(0.95);
+}
+
 /* Main Wrapper */
 .main-wrapper {
   position: relative;
@@ -168,10 +193,10 @@ html, body {
   background: var(--glass-bg);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
-  border: 2.5px solid var(--glass-border);
+  border: 2px solid var(--glass-border);
   border-radius: 28px;
   padding: 36px 20px;
-  box-shadow: 0 15px 40px var(--rose-glow), inset 0 0 15px rgba(255, 255, 255, 0.8);
+  box-shadow: 0 15px 40px var(--rose-glow), inset 0 0 15px rgba(255, 255, 255, 0.85);
   position: relative;
   overflow: hidden;
 }
@@ -181,8 +206,8 @@ html, body {
 }
 
 @keyframes pulseGlow {
-  0% { box-shadow: 0 10px 30px rgba(236, 72, 153, 0.25); }
-  100% { box-shadow: 0 16px 45px rgba(236, 72, 153, 0.5); }
+  0% { box-shadow: 0 10px 30px rgba(236, 72, 153, 0.2); }
+  100% { box-shadow: 0 16px 45px rgba(236, 72, 153, 0.4); }
 }
 
 .text-center {
@@ -190,13 +215,13 @@ html, body {
 }
 
 .heart-pulse-icon {
-  font-size: 3.2rem;
+  font-size: 3rem;
   color: var(--primary-pink);
   margin-bottom: 12px;
   animation: heartPulse 1.4s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
   display: inline-block;
   cursor: pointer;
-  filter: drop-shadow(0 4px 14px var(--rose-glow));
+  filter: drop-shadow(0 4px 12px var(--rose-glow));
 }
 
 @keyframes heartPulse {
@@ -209,16 +234,15 @@ html, body {
   font-size: 1.85rem;
   color: var(--deep-pink);
   margin-bottom: 10px;
-  text-shadow: 0 2px 10px rgba(219, 39, 119, 0.2);
   line-height: 1.4;
 }
 
 .romantic-title.big-title {
-  font-size: 2.05rem;
+  font-size: 2.1rem;
 }
 
 .subtitle {
-  font-size: 1.02rem;
+  font-size: 1.05rem;
   color: var(--text-muted);
   line-height: 1.7;
   margin-bottom: 24px;
@@ -226,7 +250,7 @@ html, body {
 }
 
 /* =========================================
-   COUNTDOWN TIMER DISPLAY (ALL PINK)
+   STAGE 1: COUNTDOWN TIMER (ALL PINK)
 ========================================= */
 
 .countdown-grid {
@@ -239,19 +263,14 @@ html, body {
 
 .time-block {
   background: #fff;
-  border: 2.5px solid #f472b6;
+  border: 2px solid #f472b6;
   border-radius: 20px;
   padding: 14px 10px;
   min-width: 82px;
-  box-shadow: 0 6px 20px var(--rose-glow);
+  box-shadow: 0 6px 18px var(--rose-glow);
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: transform 0.2s ease;
-}
-
-.time-block:hover {
-  transform: translateY(-2px);
 }
 
 .time-number {
@@ -287,38 +306,18 @@ html, body {
   border-right: 3px solid var(--deep-pink);
   padding: 14px 16px;
   border-radius: 0 16px 16px 0;
-  margin-bottom: 22px;
-  min-height: 70px;
+  min-height: 60px;
   display: flex;
   align-items: center;
-  gap: 10px;
-}
-
-.quote-icon {
-  font-size: 1.2rem;
-  color: var(--deep-pink);
+  justify-content: center;
 }
 
 .dynamic-wait-text {
-  font-family: var(--font-poem);
-  font-size: 1.15rem;
+  font-family: var(--font-letter);
+  font-size: 1.2rem;
   color: var(--text-dark);
   line-height: 1.7;
-  font-style: italic;
   transition: opacity 0.3s ease;
-}
-
-.egypt-time-note {
-  font-size: 0.86rem;
-  color: var(--deep-pink);
-  font-weight: 700;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: #fff;
-  border: 1.5px dashed var(--primary-pink);
-  padding: 8px 14px;
-  border-radius: 16px;
 }
 
 /* =========================================
@@ -327,7 +326,7 @@ html, body {
 
 .celebration-badge {
   display: inline-block;
-  background: linear-gradient(135deg, #fdf2f8, #fce7f3);
+  background: #fff;
   border: 1.5px solid var(--hot-pink);
   border-radius: 20px;
   padding: 8px 18px;
@@ -337,12 +336,6 @@ html, body {
   font-weight: 700;
   margin-bottom: 14px;
   box-shadow: 0 4px 15px var(--rose-glow);
-}
-
-.celebration-badge.gold-badge {
-  border-color: #f59e0b;
-  color: #b45309;
-  background: #fffbeb;
 }
 
 .hold-instruction {
@@ -424,12 +417,12 @@ html, body {
 
 .tap-fallback {
   margin-top: 14px;
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   color: var(--text-muted);
 }
 
 /* =========================================
-   STAGE 3: THE MIDNIGHT REVEAL
+   STAGE 3: THE REVEAL & ROMANTIC LETTER
 ========================================= */
 
 .photo-frame {
@@ -437,7 +430,7 @@ html, body {
   width: 100%;
   max-width: 400px;
   height: 360px;
-  margin: 0 auto 20px;
+  margin: 0 auto 22px;
   border-radius: 22px;
   overflow: hidden;
   border: 3px solid var(--primary-pink);
@@ -464,146 +457,77 @@ html, body {
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(6px);
   color: #fff;
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   font-weight: 600;
   padding: 6px 14px;
   border-radius: 18px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
 
-/* Egyptian Letter Box */
+/* Sincere Egyptian Letter Box (No Emojis) */
 .egyptian-letter-box {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   border: 2px solid var(--glass-border);
   border-radius: 22px;
-  padding: 22px 18px;
-  margin-bottom: 22px;
+  padding: 24px 20px;
+  margin-bottom: 20px;
   text-align: right;
-  box-shadow: 0 6px 20px rgba(236, 72, 153, 0.15);
+  box-shadow: 0 8px 24px rgba(236, 72, 153, 0.12);
 }
 
-.letter-tag {
-  font-family: var(--font-title);
-  font-size: 1.05rem;
-  color: var(--deep-pink);
-  font-weight: 700;
-  margin-bottom: 12px;
-  border-bottom: 1.5px dashed var(--primary-pink);
-  padding-bottom: 6px;
-}
-
-.main-statement {
-  font-family: var(--font-title);
+.letter-paragraph {
+  font-family: var(--font-letter);
   font-size: 1.25rem;
-  color: var(--deep-pink);
-  line-height: 1.8;
-  margin-bottom: 14px;
+  color: var(--text-dark);
+  line-height: 2.1;
+  margin-bottom: 18px;
+  text-align: justify;
 }
 
-.sweet-words, .prayer-words {
-  font-size: 1.06rem;
-  color: var(--text-dark);
-  line-height: 1.85;
-  margin-bottom: 14px;
-  font-weight: 600;
+.letter-paragraph.opening {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--deep-pink);
+  text-align: right;
+  border-bottom: 1.5px dashed var(--primary-pink);
+  padding-bottom: 12px;
+}
+
+.letter-paragraph.closing {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--deep-pink);
+  margin-bottom: 0;
+  text-align: right;
+  border-top: 1.5px dashed var(--primary-pink);
+  padding-top: 14px;
 }
 
 .song-lyrics-card {
   background: linear-gradient(135deg, #fff0f5, #ffe4ec);
-  border-right: 3px solid var(--hot-pink);
+  border-right: 4px solid var(--hot-pink);
   border-radius: 0 14px 14px 0;
-  padding: 12px 16px;
-  margin: 16px 0;
-  position: relative;
-}
-
-.song-note-icon {
-  position: absolute;
-  top: 10px;
-  left: 12px;
-  color: var(--hot-pink);
-  font-size: 1.2rem;
-  opacity: 0.6;
+  padding: 14px 18px;
+  margin: 20px 0;
 }
 
 .lyrics-line {
-  font-family: var(--font-title);
-  font-size: 1.08rem;
-  color: var(--deep-pink);
-  line-height: 1.7;
-}
-
-/* Interactive Reaction */
-.interactive-reaction-box {
-  background: #fff;
-  border: 2px dashed #f472b6;
-  border-radius: 20px;
-  padding: 20px 16px;
-  margin-top: 10px;
-}
-
-.reaction-prompt {
-  font-family: var(--font-title);
-  font-size: 1.15rem;
-  color: var(--deep-pink);
-  margin-bottom: 14px;
+  font-family: var(--font-body);
+  font-size: 1.05rem;
   font-weight: 700;
-}
-
-.love-reaction-btn {
-  width: 100%;
-  min-height: 52px;
-  border-radius: 26px;
-  border: none;
-  background: linear-gradient(135deg, #ff758c, #ec4899);
-  color: #fff;
-  font-family: var(--font-title);
-  font-size: 1.12rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  cursor: pointer;
-  box-shadow: 0 6px 20px var(--rose-glow);
-  transition: all 0.25s ease;
-}
-
-.love-reaction-btn:active {
-  transform: scale(0.96);
-}
-
-.reaction-success {
-  display: none;
-  margin-top: 14px;
-  padding: 14px;
-  border-radius: 16px;
-  background: #fdf2f8;
-  border: 2px solid var(--hot-pink);
-  font-family: var(--font-title);
-  font-size: 1.08rem;
   color: var(--deep-pink);
-  line-height: 1.7;
-  animation: fadeIn 0.4s ease;
+  line-height: 1.8;
 }
 
 /* Footer */
 .romantic-footer {
-  margin-top: 26px;
+  margin-top: 24px;
   padding: 10px;
 }
 
-.footer-sparkles {
-  font-size: 1.4rem;
-  margin-bottom: 6px;
-  letter-spacing: 6px;
-}
-
 .footer-msg {
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   color: var(--text-muted);
+  font-weight: 600;
 }
 
 /* Fullscreen Lightbox */
@@ -650,11 +574,10 @@ html, body {
 .lightbox-caption {
   margin-top: 14px;
   color: #fff;
-  font-family: var(--font-title);
+  font-family: var(--font-body);
   font-size: 1.05rem;
   text-align: center;
   line-height: 1.5;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.8);
 }
 
 .close-lightbox {
@@ -692,5 +615,9 @@ html, body {
   }
   .photo-frame {
     height: 320px;
+  }
+  .letter-paragraph {
+    font-size: 1.15rem;
+    line-height: 2;
   }
 }
